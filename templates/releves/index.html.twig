@@ -1,0 +1,102 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Herbiers{% endblock %}
+
+{% block body %}
+    <h1>Herbiers</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Lieu</th>
+                <th>Relevé Brut</th>
+                <th>Tableau</th>
+                <th>Visualisation</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for releve in releves %}
+            <tr>
+                <td>{{ releve.date|date('d/m/Y') }}</td>
+                <td>{{ releve.lieu.nom }}</td>
+                <td>{{ releve.releveBrut }}</td>
+                <td>
+                    <table class="tableau">
+                        <tbody>
+                            <tr>
+                                <td>{{ releve.releveBrut|split('/')[0] }}</td>
+                                <td>{{ releve.releveBrut|split('/')[1] }}</td>
+                                <td>{{ releve.releveBrut|split('/')[2] }}</td>
+                            </tr>
+                            <tr>
+                                <td>{{ releve.releveBrut|split('/')[3] }}</td>
+                                <td>{{ releve.releveBrut|split('/')[4] }}</td>
+                                <td>{{ releve.releveBrut|split('/')[5] }}</td>
+                            </tr>
+                            <tr>
+                                <td>{{ releve.releveBrut|split('/')[6] }}</td>
+                                <td>{{ releve.releveBrut|split('/')[7] }}</td>
+                                <td>{{ releve.releveBrut|split('/')[8] }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+                <td>
+                    <table class="tableauVisu">
+                        {% set visu = releve.generateTable %}
+                        <tbody>
+                            {% for row in visu %}
+                                <tr>
+                                    {% for cell in row %}
+                                        <td>
+                                            <table class="petitTableau">
+                                                <tbody>
+                                                {% for y in range(0, 2) %}
+                                                    <tr>
+                                                        {% for x in range(0, 2) %}
+                                                            {% if (y * 3 + x) in cell %}
+                                                                <td class="vert"></td>
+                                                            {% else %}
+                                                                <td></td>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </tr>
+                                                {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </td>
+                <td>
+                    <form method="post" action="{{ path('app_releves_delete', {'id': releve.id}) }}" onsubmit="confirm('Voulez-vous réellement supprimer ce relevé ?')">
+                        <a class="btn btn-primary" href="{{ path('app_releves_edit', {'id': releve.id}) }}">Modifier</a>
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('delete' ~ releve.id) }}">
+                        <button type="submit" class="btn btn-danger">Supprimer</button>
+                    </form>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">Aucun herbier trouvé</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <hr>
+    <h1>Ajouter un relevé</h1>
+
+    {{ form_start(form_releve) }}
+        {{ form_row(form_releve.date) }}
+        {{ form_row(form_releve.lieu) }}
+        <a href="{{ path('app_lieux') }}" class="btn btn-primary">Administrer les lieux</a>
+        {{ form_row(form_releve.releve_brut) }}
+        <button class="btn btn-primary">Ajouter</button>
+    {{ form_end(form_releve) }}
+{% endblock %}

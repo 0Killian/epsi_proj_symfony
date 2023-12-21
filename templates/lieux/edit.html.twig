@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier un lieu{% endblock %}
+
+{% block body %}
+    {{ form_start(form_lieu) }}
+        {{ form_row(form_lieu.nom) }}
+        <button type="submit" class="btn btn-primary">Modifier</button>
+    {{ form_end(form_lieu) }}
+{% endblock %}

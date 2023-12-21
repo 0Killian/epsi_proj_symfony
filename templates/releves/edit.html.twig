@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier un relevé{% endblock %}
+
+{% block body %}
+    {{ form_start(form_releve) }}
+        {{ form_row(form_releve.date) }}
+        {{ form_row(form_releve.lieu) }}
+        <a href="{{ path('app_lieux') }}" class="btn btn-primary">Administrer les lieux</a>
+        {{ form_row(form_releve.releve_brut) }}
+        <button class="btn btn-primary">Ajouter</button>
+    {{ form_end(form_releve) }}
+{% endblock %}

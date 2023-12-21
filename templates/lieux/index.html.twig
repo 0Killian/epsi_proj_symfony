@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Lieux{% endblock %}
+
+{% block body %}
+    <h1>Lieux</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for lieu in lieux %}
+            <tr>
+                <td>{{ lieu.nom }}</td>
+                <td class="d-flex flex-row">
+                    <form method="post" action="{{ path('app_lieux_delete', {'id': lieu.id}) }}" onsubmit="confirm('Êtes-vous sûr de vouloir supprimer ce lieu ?')">
+                        <a class="btn btn-primary" href="{{ path('app_lieux_edit', {'id': lieu.id}) }}">Modifier</a>
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('delete' ~ lieu.id) }}">
+                        <button type="submit" class="btn btn-danger">Supprimer</button>
+                    </form>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="2">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <hr>
+    <h1>Ajouter un lieu</h1>
+
+    {{ form_start(form_lieu) }}
+        {{ form_row(form_lieu.nom) }}
+        <button type="submit" class="btn btn-success">Ajouter</button>
+    {{ form_end(form_lieu) }}
+
+    <a class="btn btn-secondary" href="{{ path('app_releves') }}">Retour</a>
+{% endblock %}
